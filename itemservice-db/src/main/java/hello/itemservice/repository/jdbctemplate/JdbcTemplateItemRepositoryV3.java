@@ -48,7 +48,7 @@ public class JdbcTemplateItemRepositoryV3 implements ItemRepository {
     @Override
     public void update(Long itemId, ItemUpdateDto updateParam) {
         String sql = "update item set item_name=:itemName, price=:price, quantity=:quantity "
-                + "where id=?";
+                + "where id=:id";
 
         SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("itemName", updateParam.getItemName())
@@ -90,14 +90,14 @@ public class JdbcTemplateItemRepositoryV3 implements ItemRepository {
 
         boolean andFlag = false;
         if (StringUtils.hasText(itemName)) {
-            sql += " item_name like concat('%',:item_name,'%')";
+            sql += " item_name like concat('%',:itemName,'%')";
             andFlag = true;
         }
         if (maxPrice != null) {
             if (andFlag) {
                 sql += " and";
             }
-            sql += " price <= :price";
+            sql += " price <= :maxPrice";
         }
 
         log.info("sql={}", sql);
